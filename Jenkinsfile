@@ -27,11 +27,13 @@ pipeline {
 
         stage('Publish Report') {
             steps {
-                publishHTML target: [
+                publishHTML([ 
                     reportDir: 'playwright-report',
                     reportFiles: 'index.html',
-                    reportName: 'Playwright Test Report'
-                ]
+                    reportName: 'Reporte Playwright',
+                    keepAll: true,
+                    alwaysLinkToLastBuild: true
+        ])
             }
         }
     }
