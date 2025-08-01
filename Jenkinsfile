@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS 24'// Asegúrate de haber configurado esto en Jenkins
+        nodejs 'NodeJS 24' // Asegúrate de haber configurado esto en Jenkins
     }
 
     stages {
@@ -27,13 +27,19 @@ pipeline {
 
         stage('Publish Report') {
             steps {
-                publishHTML([ 
+                publishHTML([
                     reportDir: 'playwright-report',
                     reportFiles: 'index.html',
                     reportName: 'Reporte Playwright',
                     keepAll: true,
                     alwaysLinkToLastBuild: true
-        ])
+                ])
+            }
+        }
+
+        stage('Verify Report Exists') {
+            steps {
+                bat 'dir playwright-report'
             }
         }
     }
@@ -41,6 +47,9 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: '**/playwright-report/**', fingerprint: true
+            script {
+                currentBuild.displayName = "#${BUILD_NUMBER} - Playwright Tests"
+            }
         }
     }
 }
